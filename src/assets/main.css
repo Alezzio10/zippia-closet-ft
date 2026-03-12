@@ -1,35 +1,22 @@
-@import './base.css';
+/* 1. Definimos el orden */
+@layer tailwind-base, primevue, tailwind-utilities;
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+/* 2. Base de Tailwind */
+@layer tailwind-base {
+  @tailwind base;
+  
+  /* Reset mínimo manual para que la parte pública no se rompa */
+  *, ::before, ::after { box-sizing: border-box; border-width: 0; border-style: solid; }
+  img, svg { display: block; vertical-align: middle; }
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+/* 3. Forzamos a que PrimeVue use su capa (IMPORTANTE) */
+@layer primevue {
+  /* No pongas nada aquí, lo inyectaremos vía CSS imports o déjalo listo para overrides */
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+/* 4. Utilidades de Tailwind al final para que siempre ganen */
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
 }

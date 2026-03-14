@@ -19,4 +19,43 @@
 @layer tailwind-utilities {
   @tailwind components;
   @tailwind utilities;
+
+  .zippia-azul{
+    background-color: #7F82A6;
+}
+  body{
+    margin:0;
+    background-image: url('../assets/imagenes/Zippiafondo.png');
+
+  }
+  .zippia-boton{
+    background-color: #7F82A6;
+    color: black;
+    font-family: 'Abhaya Libre', serif;
+    font-weight: bold;
+    font-size: 19pt;
+    border: 2px solid black;
+    border-radius: 0.5rem /* 8px */;
+    transition: 0.3s;
+
+  }
+
+  .zippia-categoria{
+    background-color: #7F82A6;
+    color: black;
+    font-size: 18pt;
+    font-family: 'Abhaya Libre', serif;
+    transition: 0.3s;
+
+  }
+
+  .zippia-boton:hover {
+  background-color: #6F7294;
+  color: white;
+  
+}
+.azul-raro-fondo{
+  background-color: #7F82A6;
+
+}
 }

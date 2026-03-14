@@ -1,10 +1,21 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ProductosView from '../views/ProductosView.vue'
+import AdminUsers from "../views/AdminUsers.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+  //  {
+  //   path: "/",
+  //   redirect: "/admin/users"
+  // },
+
+  {
+    path: "/admin/users",
+    name: "adminUsers",
+    component: AdminUsers
+  },
     {
       path: '/',
       name: 'home',

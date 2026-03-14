@@ -1,9 +1,11 @@
 <script setup>
-import TheWelcome from '../components/TheWelcome.vue'
+import Navegacionbarra from "@/components/layouts/Navegacionbarra.vue"
+
+
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <Navegacionbarra />
   </main>
 </template>

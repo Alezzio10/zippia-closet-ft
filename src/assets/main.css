@@ -52,6 +52,7 @@
   .zippia-boton:hover {
   background-color: #6F7294;
   color: white;
+  cursor: pointer;
   
 }
 .azul-raro-fondo{

@@ -11,8 +11,7 @@
         Zippia Closet
       </h1>
 
-      <button
-        class="zippia-boton px-6 py-3 text-lg">
+      <button @click="irLogin" class="zippia-boton px-6 py-3 text-lg">
         Iniciar sesión
       </button>
 
@@ -20,3 +19,14 @@
 
   </nav>
 </template>
+
+
+<script setup>
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const irLogin = () => {
+  router.push('/login')
+}
+</script>

@@ -4,6 +4,8 @@ import router from './router'
 import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config'
 
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+
 // 1. IMPORTAR ESTILOS DE Tailwind
 import './assets/main.css' 
 
@@ -13,6 +15,13 @@ import 'primevue/resources/primevue.min.css'
 import 'primeicons/primeicons.css'
 
 const app = createApp(App)
+//
+const pinia = createPinia()
+
+
+// activar persistencia
+pinia.use(piniaPluginPersistedstate)
+
 app.use(createPinia())
 app.use(router)
 app.use(PrimeVue)

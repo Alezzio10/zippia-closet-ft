@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import ProductosView from '../views/ProductosView.vue'
 import AdminUsers from "../views/AdminUsers.vue"
 import Login from "../views/admin/Login.vue"
+import CarritoView from '../views/CarritoView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,6 +13,13 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component:Login
+    },
+
+    //ruta del carrito
+    {
+      path: '/carrito',
+      name: 'carrito',
+      component: CarritoView
     },
   //  {
   //   path: "/",

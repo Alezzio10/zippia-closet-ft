@@ -36,7 +36,7 @@
       <button class="zippia-boton" style="font-size: 20pt; font-weight: normal;">
        👁
       </button>
-      <button class="zippia-boton" style="font-size: 20pt;">
+      <button class="zippia-boton" style="font-size: 20pt;" @click="agregarAlCarrito"> 
         Agregar
       </button>
     </div>
@@ -45,7 +45,15 @@
 </template>
 
 <script setup>
-defineProps({
+
+const props = defineProps({
   producto: Object
 })
+
+const emit = defineEmits(['agregar-carrito'])
+
+const agregarAlCarrito = () => {
+  emit('agregar-carrito', props.producto)
+}
+
 </script>

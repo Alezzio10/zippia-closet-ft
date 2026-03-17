@@ -37,6 +37,7 @@
     border: 2px solid black;
     border-radius: 0.5rem /* 8px */;
     transition: 0.3s;
+    text-decoration: none;
 
   }
 

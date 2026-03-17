@@ -45,7 +45,7 @@ export const useAuthStore = defineStore('auth', {
 
       } catch (error) {
         console.error('Error en login:', error)
-        //throw error
+        
       }
     },
 
@@ -72,7 +72,7 @@ export const useAuthStore = defineStore('auth', {
         console.warn('Error al cerrar sesión:', error)
       } finally {
         this.$reset()
-        router.push('/')
+        window.location.href = '/'
       }
     }
   }

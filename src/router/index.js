@@ -5,8 +5,12 @@ import CategoriasView from '../views/admin/CategoriasView.vue'
 // import ProductosView from "../views/ProductosView.vue"
 // import PedidosView from "../views/PedidosView.vue"
 import Login from "../views/admin/Login.vue"
+<<<<<<< HEAD
+import CarritoView from '../views/CarritoView.vue'
+=======
 import PagoTarjeta from "../views/PagoTarjeta.vue"
 
+>>>>>>> main
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,6 +20,13 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component:Login
+    },
+
+    //ruta del carrito
+    {
+      path: '/carrito',
+      name: 'carrito',
+      component: CarritoView
     },
   //  {
   //   path: "/",

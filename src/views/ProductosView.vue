@@ -1,14 +1,15 @@
 <template>
-  <Navegacionbarra @toggleSidebar="toggleSidebar"/>
+  <Navegacionbarra @toggleSidebar="toggleSidebar" @usuarioSidebarAbrir ="usuarioSidebarAbrir "/>
 
   <!-- div transparente para cerrar las categorias -->
   <div
-    v-if="sidebarOpen"
+    v-if="sidebarOpen || usuarioSidebar"
     class="fixed inset-0 z-20"
     style="background-color: rgba(0, 0, 0, 30%);"
-    @click="toggleSidebar">
+    @click="sidebarOpen = false; usuarioSidebar = false">
 </div>
   <SidebarCategorias :open="sidebarOpen" :toggleSidebar="toggleSidebar" @filtrarCategoria="filtrarCategoria"/>
+  <SidebarUsuario :open="usuarioSidebar" />
 
   <div class="p-6 flex">
     <!-- espacio de filtros -->
@@ -44,6 +45,7 @@
           v-for="producto in productosFiltrados"
           :key="producto.id"
           :producto="producto"
+          @agregar-carrito="carritoStore.agregarAlCarrito"
         />
       </div>
     </div>
@@ -57,15 +59,26 @@ import { useProductoStore } from '@/stores/productoStore'
 import ProductoCard from '@/components/ProductoCard.vue'
 import Navegacionbarra from "@/components/layouts/Navegacionbarra.vue"
 import SidebarCategorias from '@/components/SidebarCategorias.vue'
+import SidebarUsuario from '@/components/SidebarUsuarios.vue'
+import { useCarritoStore } from "@/stores/carritoStore"
+
+
 
 const store = useProductoStore()
 const sidebarOpen = ref(false)
+const usuarioSidebar= ref(false)
+const carritoStore = useCarritoStore()
 
 
 const categoriaSeleccionada = ref(null)
 const busqueda = ref('')
 const precioMax = ref(999)
 const marcaSeleccionada = ref('')
+
+const usuarioSidebarAbrir = () => {
+  usuarioSidebar.value = !usuarioSidebar.value
+}
+
 
 const marcasDisponibles = computed(() => {
   return [...new Set(

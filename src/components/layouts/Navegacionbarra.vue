@@ -11,12 +11,39 @@
         Zippia Closet
       </h1>
 
-      <button
+      <router-link
+        v-if="!authStore.isAuthenticated"
+        to="/login"
         class="zippia-boton px-6 py-3 text-lg">
         Iniciar sesión
-      </button>
+      </router-link>
+
+      <div v-else class="flex gap-3">
+        <router-link
+          to="/carrito"
+          class="zippia-boton px-4 py-2"
+          :style="carritoStore.totalProductos > 0 ? 'background-color: orange;' : ''"
+        >
+          Carrito
+        </router-link>
+
+        <button
+            class="zippia-boton px-4 py-2"
+            @click="$emit('usuarioSidebarAbrir')">
+            Usuario
+        </button>
+      </div>
 
     </div>
 
   </nav>
 </template>
+
+
+<script setup>
+import { useAuthStore } from '@/stores/authStore'
+import { useCarritoStore } from "@/stores/carritoStore"
+
+const authStore = useAuthStore()
+const carritoStore = useCarritoStore()
+</script>

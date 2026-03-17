@@ -22,7 +22,7 @@ const pinia = createPinia()
 // activar persistencia
 pinia.use(piniaPluginPersistedstate)
 
-app.use(createPinia())
+app.use(pinia)
 app.use(router)
 app.use(PrimeVue)
 app.mount('#app')

@@ -44,10 +44,12 @@ export const useAuthStore = defineStore('auth', {
         }
 
       } catch (error) {
-     console.error('Error en login:', error)
-      
-     throw error
-     }
+   if (error.response && error.response.status === 401) {
+    throw new Error('Credenciales inválidas')
+  }
+
+  throw error
+}
 
     },
 

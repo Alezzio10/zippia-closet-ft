@@ -1,0 +1,9 @@
+:{$PORT}
+root * /srv
+encode gzip
+
+# SPA fallback (Vue Router history mode)
+try_files {path} /index.html
+
+file_server
+

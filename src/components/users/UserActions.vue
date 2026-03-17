@@ -1,7 +1,8 @@
 <script setup>
 
-import { ref, watch } from "vue"
+import { ref } from "vue"
 import api from "../../services/api"
+import { alerts } from "../../utils/alerts"
 
 const props = defineProps({
   selectedUser: Object
@@ -41,7 +42,8 @@ const openCreateModal = () => {
     apellido: "",
     email: "",
     telefono: "",
-    password: ""
+    password: "",
+    rol_id: ""
   }
 
   showCreateModal.value = true
@@ -50,7 +52,7 @@ const openCreateModal = () => {
 const openEditModal = () => {
 
   if(!props.selectedUser){
-    alert("Seleccione un usuario primero")
+    alerts.warning("Seleccione un usuario primero")
     return
   }
 
@@ -68,6 +70,17 @@ const openEditModal = () => {
 /*CREAMOS EL USUARIO*/
 const saveUser = async () => {
 
+  if(
+   !newUser.value.name ||
+   !newUser.value.apellido ||
+   !newUser.value.email ||
+   !newUser.value.password ||
+   !newUser.value.rol_id
+  ){
+    alerts.warning("Complete todos los campos obligatorios")
+    return
+  }
+
   try{
 
     loading.value = true
@@ -78,29 +91,27 @@ const saveUser = async () => {
 
     emit("reload")
 
+    alerts.success("Usuario creado correctamente")
+
   }catch(error){
 
     console.error(error)
-    alert("Error al crear usuario")
+
+    alerts.error("Error al crear usuario")
 
   }finally{
     loading.value = false
   }
-  if(
- !newUser.value.name ||
- !newUser.value.apellido ||
- !newUser.value.email ||
- !newUser.value.password ||
- !newUser.value.rol_id
-){
- alert("Complete todos los campos obligatorios")
- return
-}
 
 }
 
 /*EDITAR EL USUARIO*/
 const updateUser = async () => {
+
+  if(!props.selectedUser){
+    alerts.warning("Seleccione un usuario primero")
+    return
+  }
 
   try{
 
@@ -112,10 +123,13 @@ const updateUser = async () => {
 
     emit("reload")
 
+    alerts.success("Usuario actualizado correctamente")
+
   }catch(error){
 
     console.error(error)
-    alert("Error al actualizar usuario")
+
+    alerts.error("Error al actualizar usuario")
 
   }finally{
     loading.value = false
@@ -127,11 +141,13 @@ const updateUser = async () => {
 const deleteUser = async () => {
 
   if(!props.selectedUser){
-    alert("Seleccione un usuario primero")
+    alerts.warning("Seleccione un usuario primero")
     return
   }
 
-  if(!confirm("¿Seguro que desea eliminar este usuario?")) return
+  const confirmed = await alerts.confirm("¿Seguro que desea eliminar este usuario?")
+
+  if(!confirmed) return
 
   try{
 
@@ -141,10 +157,13 @@ const deleteUser = async () => {
 
     emit("reload")
 
+    alerts.success("Usuario eliminado correctamente")
+
   }catch(error){
 
     console.error(error)
-    alert("Error al eliminar usuario")
+
+    alerts.error("Error al eliminar usuario")
 
   }finally{
     loading.value = false
@@ -230,7 +249,7 @@ class="mt-4 text-sm text-gray-600 bg-gray-50 p-3 rounded"
 Usuario seleccionado:
 <strong>
 
-{{ selectedUser.name }}
+{{ selectedUser.name }} {{ selectedUser.apellido }}
 
 </strong>
 
@@ -273,7 +292,7 @@ class="w-full border rounded p-2"/>
 v-model="newUser.rol_id"
 class="w-full border rounded p-2"
 >
-<option value="" placeholder="Seleccione un Rol">Seleccione un rol</option>
+<option disabled value="">Seleccione un rol</option>
 <option value="1">Administrador</option>
 <option value="2">Cliente</option>
 </select>

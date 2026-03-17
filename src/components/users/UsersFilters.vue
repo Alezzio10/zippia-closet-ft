@@ -75,9 +75,9 @@ v-model="filters.rol"
 class="w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none"
 >
 
-<option value="">Filtrar por rol</option>
-<option value="admin">Administrador</option>
-<option value="cliente">Cliente</option>
+<option disabled value="">Filtrar por rol</option>
+<option value="1">Administrador</option>
+<option value="2">Cliente</option>
 
 </select>
 
@@ -122,17 +122,20 @@ class="w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary 
 
 import { reactive, watch } from "vue"
 
+const emit = defineEmits(["filter"])
+
 const filters = reactive({
-nombre: "",
-apellido: "",
-telefono: "",
-rol: "",
-id: "",
-email: ""
+  nombre: "",
+  apellido: "",
+  telefono: "",
+  rol: "",
+  id: "",
+  email: ""
 })
+
 watch(filters, () => {
-  emit("filter", filters)
-});
+  emit("filter", { ...filters })
+}, { deep: true })
 
 const clearFilters = () => {
 
@@ -143,8 +146,8 @@ filters.rol = ""
 filters.id = ""
 filters.email = ""
 
+emit("filter", { ...filters })
 
 }
-
 
 </script>

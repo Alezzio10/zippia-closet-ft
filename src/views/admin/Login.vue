@@ -1,50 +1,70 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-    <div class="w-full max-w-md bg-white shadow-lg rounded-xl p-8 border border-gray-200">
-      <h2 class="text-3xl font-bold text-center text-gray-900 mb-6">Iniciar Sesión</h2>
-      <div v-if="errorMessage" class="mb-4 p-3 text-sm text-red-700 bg-red-100 rounded-lg border border-red-300">
+  <div class="min-h-screen flex items-center justify-center bg-gray-200">
+
+    <div class="w-full max-w-xl p-10 bg-white shadow-lg">
+
+      <h2 class="text-3xl text-center font-serif text-gray-800 mb-8">
+        INICIAR SESIÓN
+      </h2>
+
+      <div v-if="errorMessage"
+        class="mb-4 p-3 text-sm text-red-700 bg-red-100 rounded">
         {{ errorMessage }}
       </div>
 
-      <form @submit.prevent="sendLogin" class="space-y-5">
+      <form @submit.prevent="sendLogin" class="space-y-6">
+
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wide"> Correo electrónico </label>
+          <label class="block text-lg font-serif text-gray-700 mb-2">
+            Correo electrónico
+          </label>
+
           <input
             v-model="form.email"
             type="email"
             required
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+            class="w-full border border-gray-400 bg-gray-100 px-4 py-2"
           />
         </div>
 
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wide"> Contraseeña </label>
+          <label class="block text-lg font-serif text-gray-700 mb-2">
+            Contraseña
+          </label>
+
           <input
             v-model="form.password"
             type="password"
             required
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+            class="w-full border border-gray-400 bg-gray-100 px-4 py-2"
           />
         </div>
 
         <button
           type="submit"
           :disabled="loading"
-          class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg transition duration-300 disabled:opacity-50"
+          class="w-full bg-gray-600 zippia-boton"
         >
-          {{ loading ? "Ingresando..." : "Ingresar" }}
+          {{ loading ? "Ingresando..." : "INICIAR SESIÓN" }}
         </button>
+
       </form>
 
-      <p class="mt-6 text-center text-sm text-gray-600">
+      <p class="mt-6 text-center text-sm text-gray-700">
         ¿No tienes cuenta?
-        <router-link to="/register" class="text-blue-600 hover:underline font-medium">
+        <router-link
+          to="/register"
+          class="underline text-blue-600"
+        >
           Regístrate
         </router-link>
       </p>
+
     </div>
+
   </div>
 </template>
+
 
 <script setup>
 import { ref, reactive } from "vue";
@@ -77,6 +97,7 @@ const sendLogin = async () => {
   }
 };
 </script>
+
 
 
 

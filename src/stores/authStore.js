@@ -44,9 +44,11 @@ export const useAuthStore = defineStore('auth', {
         }
 
       } catch (error) {
-        console.error('Error en login:', error)
-        //throw error
-      }
+     console.error('Error en login:', error)
+      
+     throw error
+     }
+
     },
 
     async register(payload) {

@@ -6,12 +6,12 @@
 
 <div class="flex-1 p-6">
 
-<h1 class="text-black 3xl mb-4">
+<h1 class="text-black text-3xl mb-4">
 Gestion de Usuarios
 </h1>
 
 <UsersFilters
-@filter="filters = $event"
+@filter="updateFilters"
 />
 
 <UsersTable
@@ -42,15 +42,33 @@ import api from "../services/api"
 
 const users = ref([])
 const selectedUser = ref(null)
-const filters = ref({})
+
+const filters = ref({
+nombre:"",
+apellido:"",
+telefono:"",
+rol:"",
+id:"",
+email:""
+})
+
+const updateFilters = (newFilters) => {
+filters.value = newFilters
+}
 
 const loadUsers = async () => {
-  try{
-    const res = await api.get("/users")
-    users.value = res.data
-  }catch(error){
-    console.error(error)
-  }
+
+try{
+
+const res = await api.get("/users")
+users.value = res.data
+
+}catch(error){
+
+console.error(error)
+
+}
+
 }
 
 onMounted(loadUsers)

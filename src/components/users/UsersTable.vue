@@ -23,7 +23,7 @@
 <td class="p-2">{{ user.apellido || '-' }}</td>
 <td class="p-2">{{ user.email }}</td>
 <td class="p-2">{{ user.telefono || '-' }}</td>
-<td class="p-2">{{ user.rol_id }}</td>
+<td class="p-2">{{ user.rol_id == 1 ? "Administrador" : "Cliente" }}</td>
 
 </tr>
 </tbody>
@@ -51,10 +51,18 @@ const filteredUsers = computed(() => {
 
     return (
       (!props.filters.nombre || user.name?.toLowerCase().includes(props.filters.nombre.toLowerCase())) &&
-      (!props.filters.apellido || user.apellido?.toLowerCase().includes(props.filters.apellido.toLowerCase())) &&
-      (!props.filters.email || user.email?.toLowerCase().includes(props.filters.email.toLowerCase()))
-    )
 
+      (!props.filters.apellido || user.apellido?.toLowerCase().includes(props.filters.apellido.toLowerCase())) &&
+
+      (!props.filters.telefono || user.telefono?.includes(props.filters.telefono)) &&
+
+      (!props.filters.email || user.email?.toLowerCase().includes(props.filters.email.toLowerCase())) &&
+
+      (!props.filters.id || user.id == props.filters.id) &&
+
+      (!props.filters.rol || user.rol_id == props.filters.rol)
+
+    )
   })
 
 })

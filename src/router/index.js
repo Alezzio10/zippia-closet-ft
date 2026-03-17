@@ -1,8 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import ProductosView from '../views/ProductosView.vue'
 import AdminUsers from "../views/AdminUsers.vue"
+import CategoriasView from '../views/admin/CategoriasView.vue'
+// import ProductosView from "../views/ProductosView.vue"
+// import PedidosView from "../views/PedidosView.vue"
 import Login from "../views/admin/Login.vue"
+import PagoTarjeta from "../views/PagoTarjeta.vue"
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,16 +21,34 @@ const router = createRouter({
   //   path: "/",
   //   redirect: "/admin/users"
   // },
+      {
+    path: '/admin/categorias',
+    name: 'categorias',
+    component: CategoriasView
+    },
 
-  {
-    path: "/admin/users",
-    name: "adminUsers",
-    component: AdminUsers
-  },
+    {
+      path: "/admin/users",
+      name: "adminUsers",
+      component: AdminUsers
+    },
+    // {
+    // path: "/admin/productos",
+    // component: ProductosView
+    // },
+    // {
+    // path: "/admin/pedidos",
+    // component: PedidosView
+    // },
     {
       path: '/',
       name: 'home',
       component: ProductosView,
+    },
+    {
+      path: '/pago-tarjeta',
+      name: 'pagoTarjeta',
+      component: PagoTarjeta,
     },
     {
       path: '/about',

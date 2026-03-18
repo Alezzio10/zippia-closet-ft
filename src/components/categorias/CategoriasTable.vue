@@ -2,22 +2,14 @@
 
 <div class="bg-white shadow-md rounded-xl overflow-hidden">
 
-<table class="w-full">
+<table class="min-w-full text-sm text-black">
 
-<thead class="bg-[#7F82A6] text-white">
-
-<tr>
-
-<thead class="bg-[#7F82A6] text-white">
-<tr>
-<th class="p-3 text-left">Categoría</th>
-<th class="p-3 text-left">Descripción</th>
-<th class="p-3 text-left">ID</th>
+<thead class="bg-[#7F82A6] text-black">
+<tr class="text-left">
+<th class="p-3">Categoría</th>
+<th class="p-3">Descripción</th>
+<th class="p-3">ID</th>
 </tr>
-</thead>
-
-</tr>
-
 </thead>
 
 <tbody>
@@ -26,13 +18,13 @@
 v-for="cat in filteredCategorias"
 :key="cat.id"
 @click="select(cat)"
-class="border-b hover:bg-gray-100 cursor-pointer"
+class="border-b hover:bg-gray-50 cursor-pointer"
 :class="selected?.id === cat.id ? 'bg-gray-200' : ''"
 >
 
-<td class="p-3">{{ cat.nombre_categoria }}</td>
-<td class="p-3">{{ cat.descripcion_categoria }}</td>
-<td class="p-3">{{ cat.id }}</td>
+<td class="p-3 align-top text-black">{{ cat.nombre_categoria }}</td>
+<td class="p-3 align-top text-black">{{ cat.descripcion_categoria }}</td>
+<td class="p-3 align-top text-black">{{ cat.id }}</td>
 </tr>
 
 </tbody>

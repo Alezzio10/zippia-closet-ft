@@ -4,9 +4,9 @@
 
 <Sidebar/>
 
-<div class="flex-1 p-8 bg-gray-50 min-h-screen">
+<div class="flex-1 p-6 min-h-screen">
 
-<h1 class="text-3xl font-semibold mb-6">
+<h1 class="text-black text-3xl mb-4">
 
 Gestión de Categorías
 

@@ -2,15 +2,14 @@ import { createRouter, createWebHistory } from 'vue-router'
 import ProductosView from '../views/ProductosView.vue'
 import AdminUsers from "../views/AdminUsers.vue"
 import CategoriasView from '../views/admin/CategoriasView.vue'
+import AdminProductosView from '../views/admin/ProductosView.vue'
 // import ProductosView from "../views/ProductosView.vue"
 // import PedidosView from "../views/PedidosView.vue"
 import Login from "../views/admin/Login.vue"
-<<<<<<< HEAD
 import CarritoView from '../views/CarritoView.vue'
-=======
 import PagoTarjeta from "../views/PagoTarjeta.vue"
+import { useAuthStore } from '../stores/authStore'
 
->>>>>>> main
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,18 +34,22 @@ const router = createRouter({
       {
     path: '/admin/categorias',
     name: 'categorias',
+    meta: { requiresAdmin: true },
     component: CategoriasView
     },
 
     {
       path: "/admin/users",
       name: "adminUsers",
+      meta: { requiresAdmin: true },
       component: AdminUsers
     },
-    // {
-    // path: "/admin/productos",
-    // component: ProductosView
-    // },
+    {
+      path: "/admin/productos",
+      name: "adminProductos",
+      meta: { requiresAdmin: true },
+      component: AdminProductosView
+    },
     // {
     // path: "/admin/pedidos",
     // component: PedidosView
@@ -70,6 +73,16 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue'),
     },
   ],
+})
+
+router.beforeEach((to) => {
+  if (!to.meta?.requiresAdmin) return true
+
+  const auth = useAuthStore()
+  if (!auth.isAuthenticated) return { path: '/login' }
+  if (!auth.isAdmin) return { path: '/' }
+
+  return true
 })
 
 export default router

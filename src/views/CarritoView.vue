@@ -96,7 +96,7 @@
           Seguir comprando
         </router-link>
 
-        <button class="zippia-boton px-6 py-3">
+        <button class="zippia-boton px-6 py-3" @click="irAPagoTarjeta">
           Finalizar pago
         </button>
 
@@ -109,6 +109,12 @@
 
 <script setup>
 import { useCarritoStore } from "@/stores/carritoStore"
+import { useRouter } from "vue-router"
 
 const carritoStore = useCarritoStore()
+const router = useRouter()
+
+const irAPagoTarjeta = () => {
+  router.push("/pago-tarjeta")
+}
 </script>

@@ -17,7 +17,15 @@ export const useAuthStore = defineStore('auth', {
     isAuthenticated: (state) => !!state.token,
 
     isAdmin: (state) => {
-      return state.user?.roles?.some(role => role.name === 'ADMIN')
+      // Soporta distintas formas de rol según backend:
+      // - Spatie: user.roles[].name
+      // - FK propia: user.rol_id (1 = admin)
+      // - Relación: user.rol.nombre
+      if (!state.user) return false
+      if (state.user?.roles?.some(role => role?.name === 'ADMIN')) return true
+      if (state.user?.rol?.nombre === 'ADMIN' || state.user?.rol?.nombre === 'Administrador') return true
+      if (Number(state.user?.rol_id) === 1) return true
+      return false
     },
 
     isVendedor: (state) => {
@@ -42,11 +50,12 @@ export const useAuthStore = defineStore('auth', {
         carritoStore.cargarCarrito(this.user.id)
 
         // Redirección según rol
-        if (this.isAdmin || this.isVendedor) {
-          router.push('/dashboard')
-        } else {
-          router.push('/')
+        if (this.isAdmin) {
+          router.push('/admin/users')
+          return
         }
+
+        router.push('/')
 
       } catch (error) {
         console.error('Error en login:', error)

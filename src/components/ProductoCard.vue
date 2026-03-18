@@ -32,7 +32,7 @@
     </p>
 
     <!-- Botones -->
-    <div class="mt-4 flex gap-2">
+    <div class="mt-4 flex gap-2 flex-wrap">
       <button class="zippia-boton" style="font-size: 20pt; font-weight: normal;">
        👁
       </button>

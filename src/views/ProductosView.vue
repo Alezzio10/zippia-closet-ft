@@ -40,9 +40,9 @@
 
     <!-- Grid de productos -->
     <div class="w-3/4">
-      <div class="grid grid-cols-6 gap-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
         <ProductoCard
-          v-for="producto in productosFiltrados"
+          v-for="producto in productosPaginados"
           :key="producto.id"
           :producto="producto"
           @agregar-carrito="carritoStore.agregarAlCarrito"
@@ -50,6 +50,31 @@
       </div>
     </div>
   </div>
+
+
+      <div class="flex justify-center mt-6 gap-4">
+
+      <button
+        @click="paginaActual--"
+        :disabled="paginaActual === 1"
+        class="zippia-boton"
+      >
+      Anterior
+      </button>
+
+      <span class="text-black font-bold">
+       {{ paginaActual }}
+      </span>
+
+      <button
+        @click="paginaActual++"
+        :disabled="paginaActual * productosPorPagina >= productosFiltrados.length"
+        class="zippia-boton"
+      >
+      Siguiente
+      </button>
+
+      </div>
 </template>
 
 <script setup>
@@ -74,6 +99,10 @@ const categoriaSeleccionada = ref(null)
 const busqueda = ref('')
 const precioMax = ref(999)
 const marcaSeleccionada = ref('')
+
+//esto es para que haya paginas con solo 12 productos
+const paginaActual = ref(1)
+const productosPorPagina = 12
 
 const usuarioSidebarAbrir = () => {
   usuarioSidebar.value = !usuarioSidebar.value
@@ -114,6 +143,17 @@ const productosFiltrados = computed(() => {
   }
 
   return productos})
+
+
+
+  const productosPaginados = computed(() => {
+
+  const inicio = (paginaActual.value - 1) * productosPorPagina
+  const fin = inicio + productosPorPagina
+
+  return productosFiltrados.value.slice(inicio, fin)
+
+})
 
 
 const toggleSidebar = () => {

@@ -1,6 +1,16 @@
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gray-100 px-4">
     <div class="w-full max-w-md bg-white shadow-xl rounded-2xl p-8">
+  <!-- LOGO -->
+  <div class="flex justify-center mb-4">
+    <img 
+      src="../../../public/" 
+      alt="Logo" 
+      class="w-20 h-20 object-contain"
+    />
+  </div>
+
+
       <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Iniciar Sesión</h2>
       <div v-if="errorMessage" class="mb-4 p-3 text-sm text-red-600 bg-red-100 rounded-lg">
         {{ errorMessage }}

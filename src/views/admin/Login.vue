@@ -4,7 +4,7 @@
   <!-- LOGO -->
   <div class="flex justify-center mb-4">
     <img 
-      src="../../../public/" 
+      src="../../../public/logo.jpeg" 
       alt="Logo" 
       class="w-20 h-20 object-contain"
     />

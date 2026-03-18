@@ -1,10 +1,11 @@
 import { defineStore } from "pinia"
+import { useAuthStore } from "@/stores/authStore"
 
 export const useCarritoStore = defineStore("carrito", {
   state: () => ({
     carrito: []
   }),
-  persist: true,
+  // persist: true,
 
   actions: {
 
@@ -19,20 +20,31 @@ export const useCarritoStore = defineStore("carrito", {
           cantidad: 1
         })
       }
+      const authStore = useAuthStore()
+      if (authStore.user) {
+        this.guardarCarrito(authStore.user.id)
+      }
     },
 
     eliminarDelCarrito(id) {
       this.carrito = this.carrito.filter(p => p.id !== id)
+
+      const authStore = useAuthStore()
+      if (authStore.user) {
+        this.guardarCarrito(authStore.user.id)
+      }
     },
 
-    vaciarCarrito() {
-      this.carrito = []
-    },
     aumentarCantidad(id) {
         const item = this.carrito.find(p => p.id === id)
         if (item) {
             item.cantidad++
         }
+
+        const authStore = useAuthStore()
+      if (authStore.user) {
+        this.guardarCarrito(authStore.user.id)
+      }
     },
 
     disminuirCantidad(id) {
@@ -40,6 +52,23 @@ export const useCarritoStore = defineStore("carrito", {
         if (item && item.cantidad > 1) {
             item.cantidad--
         }
+
+        const authStore = useAuthStore()
+        if (authStore.user) {
+          this.guardarCarrito(authStore.user.id)
+        }
+    },
+    cargarCarrito(userId) {
+      const data = localStorage.getItem(`carrito_${userId}`)
+      this.carrito = data ? JSON.parse(data) : []
+    },
+
+    guardarCarrito(userId) {
+      localStorage.setItem(`carrito_${userId}`, JSON.stringify(this.carrito))
+    },
+
+    vaciarCarrito() {
+      this.carrito = []
     }
 
     

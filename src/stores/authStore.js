@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import api from '@/services/api'
 import router from '@/router'
+import { useCarritoStore } from "@/stores/carritoStore"
+
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -36,6 +38,9 @@ export const useAuthStore = defineStore('auth', {
         this.token = data.access_token
         this.user = data.user
 
+        const carritoStore = useCarritoStore()
+        carritoStore.cargarCarrito(this.user.id)
+
         // Redirección según rol
         if (this.isAdmin || this.isVendedor) {
           router.push('/dashboard')
@@ -56,6 +61,9 @@ export const useAuthStore = defineStore('auth', {
         this.token = data.access_token
         this.user = data.user
 
+        const carritoStore = useCarritoStore()
+        carritoStore.cargarCarrito(this.user.id)
+
         router.push('/')
       } catch (error) {
         console.error('Error en registro:', error)
@@ -64,6 +72,7 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async logout() {
+      const carritoStore = useCarritoStore()
       try {
         if (this.token) {
           await api.post('/auth/logout')
@@ -71,6 +80,7 @@ export const useAuthStore = defineStore('auth', {
       } catch (error) {
         console.warn('Error al cerrar sesión:', error)
       } finally {
+        carritoStore.vaciarCarrito()
         this.$reset()
         window.location.href = '/'
       }

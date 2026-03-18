@@ -10,6 +10,7 @@
       Categorías
     </div>
     <ul class="p-4 space-y-2" style="list-style-type: none;">
+      <li class="p-2 rounded cursor-pointer hover:bg-[#6F7294]" @click="$emit('filtrarCategoria', null)" > Todas </li>
       <li class="p-2 rounded cursor-pointer hover:bg-[#6F7294]" @click="$emit('filtrarCategoria', 'Camisetas')">Camisetas</li>
       <li class="p-2 rounded cursor-pointer hover:bg-[#6F7294]" @click="$emit('filtrarCategoria', 'Pantalones')">Pantalones</li>
       <li class="p-2 rounded cursor-pointer hover:bg-[#6F7294]" @click="$emit('filtrarCategoria', 'Vestidos')" > Vestidos </li>

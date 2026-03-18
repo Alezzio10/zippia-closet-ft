@@ -1,0 +1,227 @@
+<template>
+  <Navegacionbarra 
+  @toggleSidebar="toggleSidebar" 
+  @usuarioSidebarAbrir="usuarioSidebarAbrir" 
+/>
+
+<div
+  v-if="sidebarOpen || usuarioSidebar"
+  class="fixed inset-0 z-20"
+  style="background-color: rgba(0, 0, 0, 30%);"
+  @click="sidebarOpen = false; usuarioSidebar = false">
+</div>
+
+<SidebarCategorias 
+  :open="sidebarOpen" 
+  :toggleSidebar="toggleSidebar" 
+/>
+
+<SidebarUsuario :open="usuarioSidebar" />
+
+
+  <div class="contenedor-principal">
+
+    <button class="zippia-boton" @click="volver " style="position: absolute; top: 120px; left: 20px; padding: 5px 12px; font-size: 14pt;">
+      
+  ← Volver
+</button>
+
+    <div class="card-detalle" v-if="producto">
+
+      <!-- Imagen -->
+      <img
+        v-if="producto.imagenes && producto.imagenes.length > 0"
+        :src="`http://localhost:8000/images/${producto.imagenes[0].nombre}`"
+        class="imagen-producto"
+      />
+
+      <div v-else class="sin-imagen">
+        Sin imagen
+      </div>
+
+      <!-- Nombre -->
+      <h1 class="titulo">{{ producto.nombre }}</h1>
+
+      <!-- Marca -->
+      <p class="marca">
+        {{ producto.marca?.nombre_marca || 'Sin marca' }}
+      </p>
+
+      <!-- Precio -->
+      <p class="precio">
+        ${{ producto.precio }}
+      </p>
+
+     
+
+      <!-- Tallas -->
+      <h3 class="subtitulo">Tallas</h3>
+
+      <div class="tallas">
+            <span
+        v-for="t in ['XS','S','M','L','XL']"
+        :key="t"
+        class="talla"
+        :class="{ activa: tallaSeleccionada === t }"
+        @click="seleccionarTalla(t)"
+      >
+        {{ t }}
+      </span>
+      </div>
+
+      <!-- Botón -->
+     <button class="zippia-boton mt-4" @click="agregarAlCarrito">
+        Agregar al carrito
+      </button>
+
+    </div>
+
+    <p v-else>Cargando producto...</p>
+
+  </div>
+</template>
+
+<script setup>
+import Navegacionbarra from "@/components/layouts/Navegacionbarra.vue"
+import SidebarCategorias from '@/components/SidebarCategorias.vue'
+import SidebarUsuario from '@/components/SidebarUsuarios.vue'
+import { useCarritoStore } from "@/stores/carritoStore"
+const carritoStore = useCarritoStore()
+const agregarAlCarrito = () => {
+  if (!producto.value) return
+
+  carritoStore.agregarAlCarrito(producto.value)
+
+  console.log("Producto agregado:", producto.value)
+}
+const sidebarOpen = ref(false)
+const usuarioSidebar = ref(false)
+
+const toggleSidebar = () => {
+  sidebarOpen.value = !sidebarOpen.value
+}
+
+const usuarioSidebarAbrir = () => {
+  usuarioSidebar.value = !usuarioSidebar.value
+}
+
+import { useRoute } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const volver = () => {
+  router.back()
+}
+
+  const tallaSeleccionada = ref(null)
+
+const seleccionarTalla = (t) => {
+  tallaSeleccionada.value = t
+}
+
+const route = useRoute()
+const producto = ref(null)
+
+const cargarProducto = async () => {
+  try {
+    const id = route.params.id
+
+    const res = await axios.get(
+      `http://localhost:8000/api/productos/${id}`
+    )
+
+   producto.value = res.data.producto
+  } catch (error) {
+    console.error("Error:", error)
+  }
+}
+
+onMounted(() => {
+  cargarProducto()
+})
+</script>
+
+<style>
+.contenedor-principal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f2f2f2;
+}
+
+.card-detalle {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  width: 400px;
+  text-align: center;
+  box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+  color: black;
+}
+
+.imagen-producto {
+  width: 100%;
+  height: 250px;
+  object-fit: contain;
+  margin-bottom: 15px;
+}
+
+.sin-imagen {
+  height: 250px;
+  background: #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.titulo {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.marca {
+  color: gray;
+}
+
+.precio {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.descripcion {
+  margin-top: 10px;
+}
+
+.subtitulo {
+  margin-top: 15px;
+}
+
+.tallas {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.talla {
+  border: 1px solid black;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+.talla {
+  border: 1px solid black;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.talla.activa {
+  background: black;
+  color: white;
+}
+</style>

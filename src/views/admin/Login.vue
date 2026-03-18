@@ -18,7 +18,7 @@
 
       <form @submit.prevent="sendLogin" class="space-y-5">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1"> Email </label>
+          <label class="block text-sm font-medium text-gray-700 mb-1"> Correo </label>
           <input
             v-model="form.email"
             type="email"
@@ -28,7 +28,7 @@
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1"> Password </label>
+          <label class="block text-sm font-medium text-gray-700 mb-1"> Contraseña </label>
           <input
             v-model="form.password"
             type="password"

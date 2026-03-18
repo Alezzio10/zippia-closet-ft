@@ -1,3 +1,4 @@
+
 <template>
   <Navegacionbarra @toggleSidebar="toggleSidebar" @usuarioSidebarAbrir ="usuarioSidebarAbrir "/>
 
@@ -42,11 +43,12 @@
     <div class="w-3/4">
       <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
         <ProductoCard
-          v-for="producto in productosPaginados"
-          :key="producto.id"
-          :producto="producto"
-          @agregar-carrito="carritoStore.agregarAlCarrito"
-        />
+        v-for="producto in productosPaginados"
+        :key="producto.id"
+        :producto="producto"
+        @agregar-carrito="carritoStore.agregarAlCarrito"
+       @ver-detalle="irDetalle"
+      />
       </div>
     </div>
   </div>
@@ -75,9 +77,14 @@
       </button>
 
       </div>
+     
 </template>
 
+
 <script setup>
+
+import { useRouter } from 'vue-router'
+
 
 import { ref, onMounted, computed } from 'vue'
 import { useProductoStore } from '@/stores/productoStore'
@@ -86,6 +93,14 @@ import Navegacionbarra from "@/components/layouts/Navegacionbarra.vue"
 import SidebarCategorias from '@/components/SidebarCategorias.vue'
 import SidebarUsuario from '@/components/SidebarUsuarios.vue'
 import { useCarritoStore } from "@/stores/carritoStore"
+
+
+const router = useRouter()
+
+const irDetalle = (producto) => {
+  router.push(`/detalle/${producto.id}`)
+}
+
 
 
 

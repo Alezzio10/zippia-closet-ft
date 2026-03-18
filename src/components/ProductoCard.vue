@@ -33,9 +33,9 @@
 
     <!-- Botones -->
     <div class="mt-4 flex gap-2 flex-wrap">
-      <button class="zippia-boton" style="font-size: 20pt; font-weight: normal;">
-       👁
-      </button>
+ <button @click="verDetalle" class="zippia-boton">
+  👁
+</button>
       <button class="zippia-boton" style="font-size: 20pt;" @click="agregarAlCarrito"> 
         Agregar
       </button>
@@ -45,6 +45,14 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router'
+
+
+const router = useRouter()
+
+const verDetalle = () => {
+  router.push(`/detalle/${props.producto.id}`)
+}
 
 const props = defineProps({
   producto: Object

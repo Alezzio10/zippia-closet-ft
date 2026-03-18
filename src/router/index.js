@@ -8,13 +8,23 @@ import AdminProductosView from '../views/admin/ProductosView.vue'
 import Login from "../views/admin/Login.vue"
 import CarritoView from '../views/CarritoView.vue'
 import PagoTarjeta from "../views/PagoTarjeta.vue"
+<<<<<<< Updated upstream
 import { useAuthStore } from '../stores/authStore'
+=======
+import register from "../views/Register.vue"
+>>>>>>> Stashed changes
 
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
       //ruta de login
+        {
+      path: '/register',
+      name: 'register',
+      component:register
+    },
+
        {
       path: '/login',
       name: 'login',

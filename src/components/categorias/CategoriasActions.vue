@@ -1,6 +1,8 @@
 <template>
 
-<div class="flex gap-4 mt-6">
+<div class="bg-white shadow-md rounded-xl p-4 mt-6 border border-gray-200">
+
+<div class="flex gap-4 flex-wrap">
 
 <button
 @click="addCategoria"
@@ -27,6 +29,19 @@ class="bg-red-500 text-white px-5 py-2 rounded-lg flex items-center gap-2 shadow
 <i class="pi pi-trash"></i>
 Eliminar
 </button>
+
+</div>
+
+<!-- indicador categoría seleccionada -->
+<div
+v-if="selectedCategoria"
+class="mt-4 text-sm text-gray-600 bg-gray-50 p-3 rounded"
+>
+Categoría seleccionada:
+<strong>
+{{ selectedCategoria.nombre_categoria }}
+</strong>
+</div>
 
 </div>
 
@@ -174,8 +189,19 @@ alerts.success("Categoría eliminada")
 emit("reload")
 
 }catch(error){
+const status = error?.response?.status
+const msg = error?.response?.data?.message || "Error al eliminar la categoría"
 
-alerts.error("Error al eliminar la categoría")
+if (status === 409) {
+  await Swal.fire({
+    icon: "warning",
+    title: "No se puede eliminar",
+    text: msg,
+    confirmButtonColor: "#7F82A6",
+  })
+} else {
+  alerts.error(msg)
+}
 
 }
 

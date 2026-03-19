@@ -8,16 +8,28 @@ export const useCarritoStore = defineStore("carrito", {
   // persist: true,
 
   actions: {
+    _normalizarTalla(talla) {
+      return talla || null
+    },
 
-    agregarAlCarrito(producto) {
-      const item = this.carrito.find(p => p.id === producto.id)
+    _buscarItem(id, talla = null) {
+      const tallaNormalizada = this._normalizarTalla(talla)
+      return this.carrito.find(
+        p => p.id === id && this._normalizarTalla(p.tallaSeleccionada) === tallaNormalizada
+      )
+    },
+
+    agregarAlCarrito(producto, talla = null) {
+      const tallaNormalizada = this._normalizarTalla(talla)
+      const item = this._buscarItem(producto.id, tallaNormalizada)
 
       if (item) {
         item.cantidad++
       } else {
         this.carrito.push({
           ...producto,
-          cantidad: 1
+          cantidad: 1,
+          tallaSeleccionada: tallaNormalizada
         })
       }
       const authStore = useAuthStore()
@@ -26,8 +38,11 @@ export const useCarritoStore = defineStore("carrito", {
       }
     },
 
-    eliminarDelCarrito(id) {
-      this.carrito = this.carrito.filter(p => p.id !== id)
+    eliminarDelCarrito(id, talla = null) {
+      const tallaNormalizada = this._normalizarTalla(talla)
+      this.carrito = this.carrito.filter(
+        p => !(p.id === id && this._normalizarTalla(p.tallaSeleccionada) === tallaNormalizada)
+      )
 
       const authStore = useAuthStore()
       if (authStore.user) {
@@ -35,8 +50,8 @@ export const useCarritoStore = defineStore("carrito", {
       }
     },
 
-    aumentarCantidad(id) {
-        const item = this.carrito.find(p => p.id === id)
+    aumentarCantidad(id, talla = null) {
+        const item = this._buscarItem(id, talla)
         if (item) {
             item.cantidad++
         }
@@ -47,8 +62,8 @@ export const useCarritoStore = defineStore("carrito", {
       }
     },
 
-    disminuirCantidad(id) {
-        const item = this.carrito.find(p => p.id === id)
+    disminuirCantidad(id, talla = null) {
+        const item = this._buscarItem(id, talla)
         if (item && item.cantidad > 1) {
             item.cantidad--
         }

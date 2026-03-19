@@ -89,10 +89,14 @@ import { useCarritoStore } from "@/stores/carritoStore"
 const carritoStore = useCarritoStore()
 const agregarAlCarrito = () => {
   if (!producto.value) return
+  if (!tallaSeleccionada.value) {
+    alert("Selecciona una talla antes de agregar al carrito.")
+    return
+  }
 
-  carritoStore.agregarAlCarrito(producto.value)
+  carritoStore.agregarAlCarrito(producto.value, tallaSeleccionada.value)
 
-  console.log("Producto agregado:", producto.value)
+  console.log("Producto agregado:", producto.value, "Talla:", tallaSeleccionada.value)
 }
 const sidebarOpen = ref(false)
 const usuarioSidebar = ref(false)

@@ -20,7 +20,12 @@
     </li>
 
       <li class="p-2 rounded cursor-pointer hover:bg-[#6F7294]">
-        Mis órdenes
+        <router-link
+          to="/mis-pedidos"
+          class="block w-full h-full text-inherit no-underline"
+        >
+          Mis pedidos
+        </router-link>
       </li>
 
       <li

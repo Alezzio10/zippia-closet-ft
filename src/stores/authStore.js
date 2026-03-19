@@ -78,7 +78,7 @@ export const useAuthStore = defineStore('auth', {
         const carritoStore = useCarritoStore()
         carritoStore.cargarCarrito(this.user.id)
 
-        router.push('/')
+        return data
       } catch (error) {
         console.error('Error en registro:', error)
         throw error

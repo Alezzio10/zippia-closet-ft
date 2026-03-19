@@ -3,14 +3,17 @@ import ProductosView from '../views/ProductosView.vue'
 import AdminUsers from "../views/AdminUsers.vue"
 import CategoriasView from '../views/admin/CategoriasView.vue'
 import AdminProductosView from '../views/admin/ProductosView.vue'
+import AdminPedidosView from '../views/admin/PedidosView.vue'
 // import ProductosView from "../views/ProductosView.vue"
 // import PedidosView from "../views/PedidosView.vue"
 import Login from "../views/admin/Login.vue"
 import CarritoView from '../views/CarritoView.vue'
 import PagoTarjeta from "../views/PagoTarjeta.vue"
+import SeleccionarMetodoPago from "../views/SeleccionarMetodoPago.vue"
 import { useAuthStore } from '../stores/authStore'
 import register from "../views/Register.vue"
 import Perfil from "@/views/Perfil.vue";
+import MisPedidos from "@/views/MisPedidos.vue";
 
 
 
@@ -35,6 +38,12 @@ const router = createRouter({
         name: "Perfil",
         component: Perfil,
         meta: { requiresAuth: true } // protegida
+       },
+       {
+        path: "/mis-pedidos",
+        name: "MisPedidos",
+        component: MisPedidos,
+        meta: { requiresAuth: true }
        },
 
        {
@@ -72,6 +81,12 @@ const router = createRouter({
       meta: { requiresAdmin: true },
       component: AdminProductosView
     },
+    {
+      path: "/admin/pedidos",
+      name: "adminPedidos",
+      meta: { requiresAdmin: true },
+      component: AdminPedidosView,
+    },
     // {
     // path: "/admin/pedidos",
     // component: PedidosView
@@ -85,6 +100,12 @@ const router = createRouter({
       path: '/pago-tarjeta',
       name: 'pagoTarjeta',
       component: PagoTarjeta,
+    },
+    {
+      path: '/seleccionar-metodo-pago',
+      name: 'seleccionarMetodoPago',
+      component: SeleccionarMetodoPago,
+      meta: { requiresAuth: true },
     },
     {
       path: '/about',
@@ -103,9 +124,13 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
-  if (!to.meta?.requiresAdmin) return true
-
   const auth = useAuthStore()
+
+  if (to.meta?.requiresAuth && !auth.isAuthenticated) {
+    return { path: '/login' }
+  }
+
+  if (!to.meta?.requiresAdmin) return true
   if (!auth.isAuthenticated) return { path: '/login' }
   if (!auth.isAdmin) return { path: '/' }
 

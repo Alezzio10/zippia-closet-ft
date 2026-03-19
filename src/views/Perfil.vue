@@ -138,7 +138,6 @@ const departamentos = [
   { nombre: "Ahuachapán", municipios: ["Ahuachapán", "Apaneca", "Atiquizaya", "Concepción de Ataco", "El Refugio", "Guaymango", "Jujutla", "San Francisco Menéndez", "San Lorenzo", "San Pedro Puxtla", "Tacuba", "Turín"] },
   { nombre: "Santa Ana", municipios: ["Santa Ana", "Metapán", "Chalchuapa", "Coatepeque", "El Congo", "Masahuat", "Candelaria de la Frontera", "Texistepeque", "San Sebastián Salitrillo", "San Antonio Pajonal", "San Francisco Menéndez"] },
   { nombre: "San Salvador", municipios: ["San Salvador", "Mejicanos", "Soyapango", "Apopa", "Cuscatancingo", "Ilopango", "Ayutuxtepeque", "Tonacatepeque", "Rosario de Mora", "Nejapa"] },
-  // Agrega los demás departamentos y municipios según necesites
 ];
 
 const municipiosFiltrados = ref([]);
@@ -153,26 +152,36 @@ const filtrarMunicipios = () => {
 // Guardar cambios en backend
 const guardar = async () => {
   try {
-    const res = await api.put("/auth/user/update", {
-      ...user.value,
-      direccion: direccion.value
-    });
 
-    alert("Perfil actualizado correctamente");
-
-    // Mantener reactividad
-    Object.assign(user.value, res.data.user);
-    if(res.data.user.direccion){
-      Object.assign(direccion.value, res.data.user.direccion);
+    const payload = {
+      name: user.value.name,
+      apellido: user.value.apellido,
+      telefono: user.value.telefono
     }
 
-    authStore.user = res.data.user;
+    if (
+      direccion.value.departamento || direccion.value.municipio || direccion.value.calle
+    ) {
+      payload.direccion = direccion.value
+    }
+
+    const res = await api.put("/auth/user/update", payload)
+
+    alert("Perfil actualizado correctamente")
+
+    Object.assign(user.value, res.data.user)
+
+    if (res.data.user.direccion) {
+      Object.assign(direccion.value, res.data.user.direccion)
+    }
+
+    authStore.user = res.data.user
 
   } catch (error) {
-    console.error("Error al guardar", error);
-    alert("No se pudo guardar la información.");
+    console.error("Error al guardar", error)
+    alert("No se pudo guardar la información.")
   }
-};
+}
 
 // Cargar usuario al montar
 const cargarUsuario = async () => {

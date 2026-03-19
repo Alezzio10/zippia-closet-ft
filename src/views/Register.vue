@@ -1,5 +1,4 @@
 <template>
-      <!-- 🔹 LOGO DE FONDO -->
    <img 
   src="/public/logo.jpeg"
   class="absolute opacity-5 w-96 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
@@ -14,7 +13,7 @@
 
       <form @submit.prevent="sendRegister" class="space-y-5">
 
-        <!-- Nombre -->
+       
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
           <input v-model="form.name" type="text" class="input w-full" />
@@ -23,7 +22,7 @@
           </p>
         </div>
 
-        <!-- Apellido -->
+       
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Apellido</label>
           <input v-model="form.apellido" type="text" class="input w-full" />
@@ -32,7 +31,7 @@
           </p>
         </div>
 
-        <!-- Teléfono -->
+       
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
           <input v-model="form.telefono" type="text" class="input w-full" />
@@ -41,7 +40,7 @@
           </p>
         </div>
 
-        <!-- Email -->
+        
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Correo</label>
           <input v-model="form.email" type="email" class="input w-full" />
@@ -50,7 +49,7 @@
           </p>
         </div>
 
-        <!-- Password -->
+       
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
           <input v-model="form.password" type="password" class="input w-full" />
@@ -59,18 +58,18 @@
           </p>
         </div>
 
-        <!-- Confirmar Password -->
+       
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Confirmar Contraseña</label>
           <input v-model="form.password_confirmation" type="password" class="input w-full" />
         </div>
 
-        <!-- Error general -->
+        
         <div v-if="errorMessage" class="text-red-600 text-sm">
           {{ errorMessage }}
         </div>
 
-        <!-- Botón -->
+        
         <button
           type="submit"
           :disabled="loading"

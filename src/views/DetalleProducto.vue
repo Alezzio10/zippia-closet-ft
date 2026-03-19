@@ -28,7 +28,7 @@
 
     <div class="card-detalle" v-if="producto">
 
-      <!-- Imagen -->
+     
       <img
         v-if="producto.imagenes && producto.imagenes.length > 0"
         :src="`http://localhost:8000/images/${producto.imagenes[0].nombre}`"
@@ -39,22 +39,22 @@
         Sin imagen
       </div>
 
-      <!-- Nombre -->
+      
       <h1 class="titulo">{{ producto.nombre }}</h1>
 
-      <!-- Marca -->
+      
       <p class="marca">
         {{ producto.marca?.nombre_marca || 'Sin marca' }}
       </p>
 
-      <!-- Precio -->
+      
       <p class="precio">
         ${{ producto.precio }}
       </p>
 
      
 
-      <!-- Tallas -->
+     
       <h3 class="subtitulo">Tallas</h3>
 
       <div class="tallas">
@@ -69,7 +69,7 @@
       </span>
       </div>
 
-      <!-- Botón -->
+     
      <button class="zippia-boton mt-4" @click="agregarAlCarrito">
         Agregar al carrito
       </button>
@@ -104,6 +104,8 @@ const toggleSidebar = () => {
 const usuarioSidebarAbrir = () => {
   usuarioSidebar.value = !usuarioSidebar.value
 }
+
+// esto es mio
 
 import { useRoute } from 'vue-router'
 import { ref, onMounted } from 'vue'
@@ -144,6 +146,3 @@ onMounted(() => {
 })
 </script>
 
-<style>
-
-</style>

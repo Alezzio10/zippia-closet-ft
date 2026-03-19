@@ -66,6 +66,7 @@ export const useAuthStore = defineStore('auth', {
 
 
     },
+    // registrar usuario
 
     async register(payload) {
       try {

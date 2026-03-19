@@ -1,12 +1,21 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import api from '@/services/api'
+import { useAuthStore } from '@/stores/authStore'
+import { alerts } from '@/utils/alerts'
+import { useRouter } from 'vue-router'
+import { useCarritoStore } from '@/stores/carritoStore'
 
 const numeroTarjeta = ref('')
 const mesVencimiento = ref('')
 const anioVencimiento = ref('')
 const cvv = ref('')
-const userId = ref(1) // fallback temporal
+const authStore = useAuthStore()
+const carritoStore = useCarritoStore()
+const router = useRouter()
+const userId = computed(() => authStore.user?.id ?? null)
+const totalAPagar = computed(() => Number(carritoStore.precioTotal || 0))
+const totalProductos = computed(() => Number(carritoStore.totalProductos || 0))
 
 const errores = ref({
   numeroTarjeta: '',
@@ -24,10 +33,46 @@ const mensajeOk = ref('')
 const mensajeError = ref('')
 const pagandoMetodoId = ref(null)
 const estadoPagoPorMetodo = ref({}) // { [metodoId]: { pago_id, estado } }
+const ESTADOS_FINALES = ['Completado', 'Fallida', 'Cancelado']
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
+const consultarEstadoPago = async (pagoId) => {
+  const { data } = await api.get(`/pagos/${pagoId}`)
+  return data?.data?.estado || null
+}
+
+const esperarResultadoPago = async (pagoId, metodoId) => {
+  const MAX_INTENTOS = 12
+  const ESPERA_MS = 2000
+
+  for (let intento = 1; intento <= MAX_INTENTOS; intento += 1) {
+    const estadoActual = await consultarEstadoPago(pagoId)
+
+    if (estadoActual) {
+      estadoPagoPorMetodo.value = {
+        ...estadoPagoPorMetodo.value,
+        [metodoId]: { pago_id: pagoId, estado: estadoActual },
+      }
+    }
+
+    if (estadoActual && ESTADOS_FINALES.includes(estadoActual)) {
+      return estadoActual
+    }
+
+    await sleep(ESPERA_MS)
+  }
+
+  return 'Procesando'
+}
 
 const cargarMetodosPago = async () => {
   cargandoMetodos.value = true
   try {
+    if (!userId.value) {
+      metodosPago.value = []
+      return
+    }
     const { data } = await api.get('/metodo-pagos', { params: { user_id: userId.value } })
     metodosPago.value = data?.data || data?.['metodos de pago: '] || []
   } catch (e) {
@@ -170,6 +215,10 @@ const validarYEnviar = async () => {
   }
 
   try {
+    if (!userId.value) {
+      mensajeError.value = 'Debes iniciar sesión para guardar un método de pago.'
+      return
+    }
     const payload = {
       user_id: userId.value,
       numeroTarjeta: numeroLimpio,
@@ -203,10 +252,27 @@ const probarPago = async (metodoId) => {
   mensajeError.value = ''
   pagandoMetodoId.value = metodoId
   try {
-    // 1) crear pago (Pendiente) + pedido de prueba
+    if (!userId.value) {
+      mensajeError.value = 'Debes iniciar sesión para probar un pago.'
+      return
+    }
+    if (!carritoStore.carrito.length) {
+      const msg = 'Tu carrito está vacío. Agrega productos antes de pagar.'
+      mensajeError.value = msg
+      alerts.warning(msg)
+      return
+    }
+
+    const productos = carritoStore.carrito.map((item) => ({
+      producto_id: item.id,
+      cantidad: Number(item.cantidad || 1),
+      talla: item.tallaSeleccionada || null,
+    }))
+
+    // 1) crear pago + pedido con detalles reales del carrito
     const { data } = await api.post(`/metodo-pagos/${metodoId}/probar-pago`, {
       user_id: userId.value,
-      monto: 1.00,
+      productos,
     })
 
     const pagoId = data?.pago?.id
@@ -230,10 +296,36 @@ const probarPago = async (metodoId) => {
       [metodoId]: { pago_id: pagoId, estado: estadoLuego || 'Procesando' },
     }
 
-    mensajeOk.value = `Pago de prueba iniciado (pago_id=${pagoId}).`
+    mensajeOk.value = `Pago en proceso (pago_id=${pagoId}).`
+
+    const estadoFinal = await esperarResultadoPago(pagoId, metodoId)
+
+    if (estadoFinal === 'Completado') {
+      mensajeOk.value = `Pago exitoso (pago_id=${pagoId}).`
+      mensajeError.value = ''
+      alerts.success('Pago exitoso')
+      carritoStore.vaciarCarrito()
+      if (authStore.user?.id) {
+        carritoStore.guardarCarrito(authStore.user.id)
+      }
+      setTimeout(() => {
+        router.push('/')
+      }, 1200)
+      return
+    }
+
+    if (estadoFinal === 'Fallida' || estadoFinal === 'Cancelado') {
+      mensajeError.value = `El pago terminó en estado: ${estadoFinal}.`
+      mensajeOk.value = ''
+      alerts.error(`El pago terminó en estado: ${estadoFinal}.`)
+      return
+    }
+
+    mensajeError.value = 'El pago sigue en estado Procesando. Intenta refrescar en unos segundos.'
   } catch (e) {
     const msg = e?.response?.data?.message || e?.message || 'No se pudo iniciar el pago de prueba.'
     mensajeError.value = msg
+    alerts.error(msg)
   } finally {
     pagandoMetodoId.value = null
   }
@@ -241,15 +333,39 @@ const probarPago = async (metodoId) => {
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-    <div class="bg-white rounded-lg shadow-lg max-w-4xl w-full p-6">
-      <h2 class="text-2xl font-bold mb-4 text-center zippia-azul">
+  <div class="min-h-screen flex items-center justify-center relative px-4">
+    <img
+      src="../../public/logo.jpeg"
+      class="absolute opacity-5 w-[450px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+      alt="logo fondo"
+    />
+
+    <div class="w-full max-w-3xl">
+      <button
+        @click="$router.back()"
+        class="mb-4 zippia-boton px-5 py-2 text-base leading-none"
+      >
+        ← Volver
+      </button>
+
+      <div class="bg-white shadow-xl rounded-2xl p-8">
+      <h2 class="text-2xl font-bold mb-4 text-gray-800">
         Datos de tarjeta
       </h2>
-      <p class="text-sm text-gray-600 mb-6 text-center">
+      <p class="text-sm font-semibold text-gray-600 mb-6">
         Ingresa los datos de tu tarjeta de crédito o débito. La fecha de vencimiento
         debe ser mayor a la fecha actual.
       </p>
+
+      <div class="mb-6 border border-gray-300 rounded-lg p-4 bg-gray-50">
+        <h3 class="text-sm font-semibold text-gray-600 mb-1">Resumen de pago</h3>
+        <p class="text-sm text-gray-600">
+          Productos seleccionados: {{ totalProductos }}
+        </p>
+        <p class="text-lg font-bold text-gray-900">
+          Total a pagar: ${{ totalAPagar.toFixed(2) }}
+        </p>
+      </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <form @submit.prevent="validarYEnviar" class="space-y-4">
@@ -375,7 +491,7 @@ const probarPago = async (metodoId) => {
         </button>
       </form>
 
-        <div class="border rounded p-4">
+        <div class="border border-gray-300 rounded-lg p-4 bg-white">
           <div class="flex items-center justify-between gap-3 mb-3">
             <h3 class="font-semibold text-gray-800">Mis métodos de pago (user_id={{ userId }})</h3>
             <button
@@ -440,6 +556,7 @@ const probarPago = async (metodoId) => {
             </table>
           </div>
         </div>
+      </div>
       </div>
     </div>
   </div>

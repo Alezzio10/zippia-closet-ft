@@ -88,6 +88,8 @@
 <script setup>
 import { ref, reactive } from "vue";
 import { useAuthStore } from "@/stores/authStore";
+import router from "@/router";
+import Swal from "sweetalert2";
 
 const authStore = useAuthStore();
 
@@ -111,6 +113,13 @@ const sendRegister = async () => {
 
   try {
     await authStore.register(form);
+    await Swal.fire({
+      icon: "success",
+      title: "Registro exitoso",
+      text: "Tu cuenta fue creada correctamente.",
+      confirmButtonText: "Continuar",
+    });
+    router.push("/");
   } catch (error) {
     if (error.response?.status === 422) {
       errors.value = error.response.data;

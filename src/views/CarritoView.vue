@@ -40,6 +40,12 @@
         <p class="text-gray-500">
           ${{ item.precio }}
         </p>
+        <p class="text-gray-500" v-if="item.marca?.nombre_marca">
+          Marca: {{ item.marca.nombre_marca }}
+        </p>
+        <p class="text-gray-500" v-if="item.tallaSeleccionada">
+          Talla: {{ item.tallaSeleccionada }}
+        </p>
       </div>
 
       <!-- Cantidad -->
@@ -47,7 +53,7 @@
 
         <button
           class="zippia-boton px-3"
-          @click="carritoStore.disminuirCantidad(item.id)"
+          @click="carritoStore.disminuirCantidad(item.id, item.tallaSeleccionada)"
         >
           -
         </button>
@@ -58,7 +64,7 @@
 
         <button
           class="zippia-boton px-3"
-          @click="carritoStore.aumentarCantidad(item.id)"
+          @click="carritoStore.aumentarCantidad(item.id, item.tallaSeleccionada)"
         >
           +
         </button>
@@ -73,7 +79,7 @@
       <!-- Eliminar -->
       <button
         class="zippia-boton"
-        @click="carritoStore.eliminarDelCarrito(item.id)"
+        @click="carritoStore.eliminarDelCarrito(item.id, item.tallaSeleccionada)"
       >
         Eliminar
       </button>
@@ -96,7 +102,7 @@
           Seguir comprando
         </router-link>
 
-        <button class="zippia-boton px-6 py-3" @click="irAPagoTarjeta">
+        <button class="zippia-boton px-6 py-3" @click="irASeleccionMetodoPago">
           Finalizar pago
         </button>
 
@@ -114,7 +120,7 @@ import { useRouter } from "vue-router"
 const carritoStore = useCarritoStore()
 const router = useRouter()
 
-const irAPagoTarjeta = () => {
-  router.push("/pago-tarjeta")
+const irASeleccionMetodoPago = () => {
+  router.push("/seleccionar-metodo-pago")
 }
 </script>

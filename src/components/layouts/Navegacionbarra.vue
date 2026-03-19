@@ -18,7 +18,10 @@
         Iniciar sesión
       </router-link>
 
-      <div v-else class="flex gap-3">
+      <div v-else class="flex items-center gap-3">
+        <span class="text-black font-semibold saludo-usuario">
+          Hola{{ nombreUsuario ? `, ${nombreUsuario}` : '' }}
+        </span>
         <router-link
           to="/carrito"
           class="zippia-boton px-4 py-2"
@@ -43,7 +46,16 @@
 <script setup>
 import { useAuthStore } from '@/stores/authStore'
 import { useCarritoStore } from "@/stores/carritoStore"
+import { computed } from 'vue'
 
 const authStore = useAuthStore()
 const carritoStore = useCarritoStore()
+const nombreUsuario = computed(() => authStore.user?.name || '')
 </script>
+
+<style scoped>
+.saludo-usuario {
+  font-family: 'Abhaya Libre', serif;
+  font-size: 18pt;
+}
+</style>

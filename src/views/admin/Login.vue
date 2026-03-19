@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gray-100 px-4">
     <div class="w-full max-w-md bg-white shadow-xl rounded-2xl p-8">
-  <!-- LOGO -->
+  
   <div class="flex justify-center mb-4">
     <img 
       src="../../../public/logo.jpeg" 

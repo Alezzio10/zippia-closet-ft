@@ -11,8 +11,13 @@
 
     <ul class="p-4 space-y-2" style="list-style-type: none;">
       <li class="p-2 rounded cursor-pointer hover:bg-[#6F7294]">
+      <router-link 
+        to="/perfil" 
+        class="block w-full h-full text-inherit no-underline"
+      >
         Perfil
-      </li>
+      </router-link>
+    </li>
 
       <li class="p-2 rounded cursor-pointer hover:bg-[#6F7294]">
         Mis órdenes

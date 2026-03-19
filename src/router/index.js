@@ -10,6 +10,7 @@ import CarritoView from '../views/CarritoView.vue'
 import PagoTarjeta from "../views/PagoTarjeta.vue"
 import { useAuthStore } from '../stores/authStore'
 import register from "../views/Register.vue"
+import Perfil from "@/views/Perfil.vue";
 
 
 
@@ -29,6 +30,12 @@ const router = createRouter({
       name: 'register',
       component:register
     },
+    {
+        path: "/perfil",
+        name: "Perfil",
+        component: Perfil,
+        meta: { requiresAuth: true } // protegida
+       },
 
        {
       path: '/login',
